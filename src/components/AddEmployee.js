@@ -2,30 +2,37 @@ import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
-function EditEmployee(props) {
-    const [name, setName] = useState(props.name);
-    const [role, setRole] = useState(props.role);
+function AddEmployee(props){
+
+    const [name, setName] = useState('');
+    const [role, setRole] = useState('');
+    const [img, setImg] = useState('');
 
     const [show, setShow] = useState(false);
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
-    return (
-        <>
 
-            <button onClick={handleShow} className="px-4 py-1 text-sm text-purple-600 font-semibold rounded-full border border-purple-200 hover:text-white hover:bg-purple-600 hover:border-transparent focus:outline-none focus:ring-2 focus:ring-purple-600 focus:ring-offset-2">Edit</button>
+    return(        
+      <>
+      
+            <button onClick={handleShow} className="block mx-auto m-2 bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded">Add Employee</button>
 
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Person Information</Modal.Title>
+                    <Modal.Title>Add Employee</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <form onSubmit={(e) => {
                         //prevent page refresh on submit form
                         e.preventDefault();
-                        props.updateEmployee(props.id,name,role);
+                        props.newEmployee(name, role, img);
                         handleClose();
+
+                        setName('');
+                        setRole('');
+                        setImg('');
                     }}
                          id='editmodal'
                     >
@@ -38,6 +45,7 @@ function EditEmployee(props) {
                                         <div className="mt-2">
                                             <input id="employeeName"
                                                 type="text"
+                                                placeholder='Toni'
                                                 autocomplete="email"
                                                 Value={name}
                                                 onChange={(e) => { setName(e.target.value) }}
@@ -51,8 +59,21 @@ function EditEmployee(props) {
                                         <div className="mt-2">
                                             <input id="employeeRole"
                                                 type="text"
+                                                placeholder='Junior'
                                                 defaultValue={role}
                                                 onChange={(e) => { setRole(e.target.value) }}
+                                                required className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></input>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label for="eemployeeImg" className="block text-sm font-medium leading-6 text-gray-900">Image URL</label>
+                                        <div className="mt-2">
+                                            <input id="employeeImg"
+                                                type="text"
+                                                placeholder='https://www.google.pt'
+                                                value={img}
+                                                onChange={(e) => { setImg(e.target.value) }}
                                                 required className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></input>
                                         </div>
                                     </div>
@@ -67,13 +88,13 @@ function EditEmployee(props) {
                     <button className='bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded' onClick={handleClose}>
                         Close
                     </button>
-                    <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded' form="editmodal">
-                        Save Changes
+                    <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'  onClick={handleClose} form="editmodal">
+                        Add Employee
                     </button>
                 </Modal.Footer>
             </Modal>
-        </>
+      </>
     );
 }
 
-export default EditEmployee;
+export default AddEmployee;
