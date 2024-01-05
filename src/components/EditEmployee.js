@@ -21,41 +21,53 @@ function EditEmployee(props) {
                     <Modal.Title>Person Information</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <div className="flex min-h-full flex-col justify-center px-2 py-2 lg:px-2">
-                        <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-                            <form className="space-y-6" action="#" method="POST">
-                                <div>
-                                    <label for="employeeName" className="block text-sm font-medium leading-6 text-gray-900">Employee Name</label>
-                                    <div className="mt-2">
-                                        <input  id="employeeName" 
-                                                type="text" 
-                                                autocomplete="email" 
-                                                Value={name}
-                                                onChange={(e) => {setName(e.target.value)}}
-                                                required className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                                        </input>
-                                    </div>
-                                </div>
+                    <form onSubmit={(e) => {
+                        //prevent page refresh on submit form
+                        e.preventDefault();
+                        props.updateEmployee(props.id,name,role);
+                        handleClose();
+                    }}
+                         id='editmodal'
+                    >
 
-                                <div>
-                                    <label for="employeeRole" className="block text-sm font-medium leading-6 text-gray-900">Role</label>
-                                    <div className="mt-2">
-                                        <input  id="employeeRole" 
-                                                type="text" 
-                                                defaultValue={role}
-                                                onChange={(e) => {setRole(e.target.value)}}
-                                                required className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></input>
+                        <div className="flex min-h-full flex-col justify-center px-2 py-2 lg:px-2">
+                            <div className="sm:mx-auto sm:w-full sm:max-w-sm">
+                                <form className="space-y-6" action="#" method="POST">
+                                    <div>
+                                        <label for="employeeName" className="block text-sm font-medium leading-6 text-gray-900">Employee Name</label>
+                                        <div className="mt-2">
+                                            <input id="employeeName"
+                                                type="text"
+                                                autocomplete="email"
+                                                Value={name}
+                                                onChange={(e) => { setName(e.target.value) }}
+                                                required className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                            </input>
+                                        </div>
                                     </div>
-                                </div>
-                            </form>
+
+                                    <div>
+                                        <label for="employeeRole" className="block text-sm font-medium leading-6 text-gray-900">Role</label>
+                                        <div className="mt-2">
+                                            <input id="employeeRole"
+                                                type="text"
+                                                defaultValue={role}
+                                                onChange={(e) => { setRole(e.target.value) }}
+                                                required className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></input>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
-                    </div>
+                    </form>
+
+
                 </Modal.Body>
                 <Modal.Footer>
                     <button className='bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded' onClick={handleClose}>
                         Close
                     </button>
-                    <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded' onClick={handleClose}>
+                    <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded' form="editmodal">
                         Save Changes
                     </button>
                 </Modal.Footer>
