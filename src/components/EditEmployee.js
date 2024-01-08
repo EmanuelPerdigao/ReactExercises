@@ -64,12 +64,16 @@ function EditEmployee(props) {
 
                 </Modal.Body>
                 <Modal.Footer>
-                    <button className='bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded' onClick={handleClose}>
+                    <button className='bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded' onClick={handleClose}>
                         Close
+                    </button>
+                    <button className='bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded' onClick={() => props.deleteEmployee(props.id)}>
+                        Delete Employee
                     </button>
                     <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded' form="editmodal">
                         Save Changes
                     </button>
+                
                 </Modal.Footer>
             </Modal>
         </>

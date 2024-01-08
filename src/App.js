@@ -3,6 +3,8 @@ import Employee from './components/Employee';
 import AddEmployee from './components/AddEmployee';
 import { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
+import EditEmployee from './components/EditEmployee';
+import Header from './components/Header';
 
 function App() {
 
@@ -35,6 +37,10 @@ function App() {
     },
   ]);
 
+
+  //================================================================= CREATE NEW EMPLOYEE
+
+
   function newEmployee(name, role, img) {
 
     const newEmployee = {
@@ -47,6 +53,27 @@ function App() {
     setEmployees([...employees, newEmployee]);
 
   };
+
+  //================================================================= DELETE EMPLOYEE
+
+
+  function deleteEmployee(id) {
+
+    for (let index = 0; index < employees.length; index++) {
+      if (id === employees[index].id) {
+        const updatedEmployees = [...employees];
+        employees.splice(index, 1);
+        //updatedEmployees[index] = { id: id, name: newName, role: newRole, img: employees[index].img };
+        setEmployees(updatedEmployees);
+        break;
+      }
+    }
+
+  };
+
+
+  //================================================================= UPDATE EMPLOYEE
+
 
   function updateEmployee(id, newName, newRole) {
 
@@ -72,22 +99,43 @@ function App() {
     }
   };
 
+
   return (
     <>
+      <div className='App bg-gray-300 min-h-screen'>
 
-      <div className="flex flex-wrap justify-center">
+        <Header></Header>
+        <div className="flex flex-wrap justify-center my-2">
 
-        {employees.map((employee) => {
-          return (
+          {employees.map((employee) => {
 
-            <Employee id={employee.id} name={employee.name} role={employee.role} img={employee.img} updateEmployee={updateEmployee}></Employee>
+            const editEmployee = <EditEmployee
+              name={employee.name}
+              role={employee.role}
+              id={employee.id}
+              updateEmployee={updateEmployee}
+              deleteEmployee={deleteEmployee}>
 
-          );
+            </EditEmployee>
 
-        })}
+            return (
 
+              <Employee
+                id={employee.id}
+                name={employee.name}
+                role={employee.role}
+                img={employee.img}
+                editEmployee={editEmployee}>
+
+              </Employee>
+
+            );
+
+          })}
+
+        </div>
+        <AddEmployee newEmployee={newEmployee}></AddEmployee>
       </div>
-      <AddEmployee newEmployee={newEmployee}></AddEmployee>
     </>
   );
 }

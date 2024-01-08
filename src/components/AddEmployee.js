@@ -17,7 +17,7 @@ function AddEmployee(props){
     return(        
       <>
       
-            <button onClick={handleShow} className="block mx-auto m-2 bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded">Add Employee</button>
+            <button onClick={handleShow} className="block mx-auto m-2 bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded">+ Add Employee</button>
 
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
