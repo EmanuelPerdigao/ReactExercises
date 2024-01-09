@@ -1,12 +1,13 @@
 import { Fragment } from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { NavLink } from 'react-router-dom'
 
 const navigation = [
-  { name: 'Dashboard', href: '#', current: true },
-  { name: 'Team', href: '#', current: false },
-  { name: 'Projects', href: '#', current: false },
-  { name: 'Calendar', href: '#', current: false },
+  { name: 'Employees', href: '/employees' },
+  { name: 'Customers', href: '/customers' },
+  { name: 'Projects', href: '/test' },
+  { name: 'Calendar', href: '/test2' },
 ]
 
 function classNames(...classes) {
@@ -44,17 +45,21 @@ export default function Header(props) {
                   <div className="hidden sm:ml-6 sm:block">
                     <div className="flex space-x-4">
                       {navigation.map((item) => (
-                        <a
+                        <NavLink
                           key={item.name}
-                          href={item.href}
-                          className={classNames(
-                            item.current ? 'no-underline bg-gray-900 text-white' : 'no-underline text-gray-300 hover:bg-gray-700 hover:text-white',
-                            'rounded-md px-3 py-2 text-sm font-medium'
-                          )}
-                          aria-current={item.current ? 'page' : undefined}
+                          to={item.href}
+
+                          className={({ isActive }) => {
+                            return (
+                              'px-3 py-2 rounded-md text-sm font-medium no-underline ' +
+                              (isActive ? 'bg-gray-900 text-white'
+                                : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                              )
+                            );
+                          }}
                         >
                           {item.name}
-                        </a>
+                        </NavLink>
                       ))}
                     </div>
                   </div>
@@ -132,27 +137,35 @@ export default function Header(props) {
             <Disclosure.Panel className="sm:hidden">
               <div className="space-y-1 px-2 pb-3 pt-2">
                 {navigation.map((item) => (
-                  <Disclosure.Button
-                    key={item.name}
-                    as="a"
-                    href={item.href}
-                    className={classNames(
-                      item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                      'block rounded-md px-3 py-2 text-base font-medium'
-                    )}
-                    aria-current={item.current ? 'page' : undefined}
-                  >
-                    {item.name}
-                  </Disclosure.Button>
+                  <>
+                    <NavLink
+                      key={item.name}
+                      to={item.href}
+
+                      className={({ isActive }) => {
+                        return (
+                          'block px-3 py-2 rounded-md text-sm font-medium no-underline ' +
+                          (isActive ? 'bg-gray-900 text-white'
+                            : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                          )
+                        );
+                      }}
+                    >
+                      {item.name}
+                    </NavLink>
+                  </>
                 ))}
               </div>
-              
             </Disclosure.Panel>
-            {props.children}
           </>
         )}
-      </Disclosure>
-      
+      </Disclosure >
+      <div className='bg-gray-300'>
+        <div className='max-w-7x1 mx-auto min-h-screen px-2 py-2'>
+          {props.children}
+        </div>
+      </div>
+
     </>
   )
 

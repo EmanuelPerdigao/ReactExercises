@@ -4,11 +4,9 @@ import AddEmployee from '../components/AddEmployee';
 import { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import EditEmployee from '../components/EditEmployee';
-import Header from '../components/Header';
 
 function Employees() {
 
-  const [employeeRole, setEmployeeRole] = useState('none');
   const [employees, setEmployees] = useState([
 
     {
@@ -102,9 +100,7 @@ function Employees() {
 
   return (
     <>
-      <div className='App bg-gray-300 min-h-screen'>
-        
-        <div className="flex flex-wrap justify-center my-2">
+        <div className="flex flex-wrap justify-center">
 
           {employees.map((employee) => {
 
@@ -134,7 +130,6 @@ function Employees() {
 
         </div>
         <AddEmployee newEmployee={newEmployee}></AddEmployee>
-      </div>
     </>
   );
 }
