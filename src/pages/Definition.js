@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react"
 import { redirect, useParams, Link } from "react-router-dom";
 import notFound from "../components/NotFound";
+import DefinitionSearch from "../components/DefinitionSearch"
 
 export default function Definition() {
-    const [word, setWord] = useState('helicopter');
-    const [notFound, setNotFound] = useState(false);
     const [error, setError] = useState(false);
     const [apiResponse, setApiResponse] = useState();
     let { search } = useParams();
@@ -14,13 +13,12 @@ export default function Definition() {
     useEffect(() => {
         fetch(url)
             .then((response) => {
-                console.log(response.status);
-
+                
                 if (!response.ok) {
                     setError(true);
                     throw new Error('Something went wrong!');
                 }
-                return response.json()
+                return response.json();
             })
             .then((data) => {
                 setApiResponse(data[0].meanings);
@@ -41,19 +39,22 @@ export default function Definition() {
 
     return (
         <>
+            {apiResponse ? (
+                <>
+                    <p>Here is a definition of-{search}:</p>
 
-            <p>Here is a definition of-{search}:</p>
-            {
-                apiResponse
-                    ? apiResponse.map((meaning) => {
+                    {apiResponse.map((meaning) => {
                         return (
                             <p>
                                 {meaning.partOfSpeech + ' :'}
                                 {meaning.definitions[0].definition}
                             </p>
                         );
-                    })
-                    : null
+                    })}
+                    <p>Search again!</p>
+                    <DefinitionSearch></DefinitionSearch>
+                </>
+            ) : null
             }
         </>
     );
