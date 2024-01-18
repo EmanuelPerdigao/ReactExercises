@@ -10,14 +10,13 @@ function Customers() {
     useEffect(() => {
         fetch(url)
             .then((response) => {
-                
+
                 if (!response.ok) {
                     throw new Error('Something went wrong!');
                 }
                 return response.json();
             })
             .then((data) => {
-                console.log(data.customers);
                 setCustomers(data.customers);
             })
             .catch((e) => {
@@ -27,23 +26,25 @@ function Customers() {
 
     return (
         <>
-            <div>
-                <p>Hello From Customers</p>
-            </div>
-
-            {customers ? (
-                <>
-                    {customers.map((customer) => {
+            <h1>Here are our Customers</h1>
+            <ul>
+                {customers
+                    ? customers.map((customer) => {
                         return (
-                            <p>
-                                <Link to={"/api/customer/" + customer.id}>{"Customer name: " + customer.name}</Link>
-                                {"Customer industry:" + customer.industry}
-                            </p>
+
+                            <li key={customer.id}>
+                                <Link to={"/api/customer/" + customer.id}>{"Customer name: " + customer.name}
+                                         {" Customer industry: " + customer.industry}
+                                </Link>
+                            </li>
+
+
                         );
-                    })}
-                </>
-            ) : null
-            }
+                    })
+                    : null
+                }
+            </ul>
+
         </>
 
     );
