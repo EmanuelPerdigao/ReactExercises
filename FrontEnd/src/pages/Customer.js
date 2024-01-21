@@ -13,8 +13,8 @@ function Customer() {
     const [tempCustomer, setTempCustomer] = useState();
     //A variable to know when some input of the customer has been changed
     const [inputChanged, setInputChanged] = useState(false);
-    const [NotFound, setNotFound] = useState();
-
+    const [notFound, setNotFound] = useState();
+    const [error, setError] = useState();
 
     useEffect(() => {
         fetch(data.baseURL + 'api/customer/' + id)
@@ -26,7 +26,6 @@ function Customer() {
 
                 if (!response.ok) {
                     navigate("/404");
-                    console.log("error")
                     throw new Error('Something went wrong!');
                 }
                 return response.json();
@@ -43,7 +42,9 @@ function Customer() {
     //Check if the customer information is equal to the newTempCustomer if it is does not show the buttons
     useEffect(() => {
 
-        if(isEqual(customer, tempCustomer)){
+
+
+        if (isEqual(customer, tempCustomer)) {
             setInputChanged(false);
         }
 
@@ -77,53 +78,68 @@ function Customer() {
         })
             .then((response) => {
                 if (!response.ok) {
-                    throw new Error('something wen wrong!');
+                    throw new Error('Something went wrong!');
                 }
                 return response.json();
             })
             .then((data) => {
                 setInputChanged(false);
                 setCustomer(data.customer);
+                setError();
             })
             .catch((e) => {
-                console.log(e);
+                setError(e.message);
             })
     }
 
-return (
-    <>
-        {NotFound ? <NotFound /> : null}
-        {customer ?
-            <div>
-                <input className='m-2 block px-2' type="text" value={tempCustomer.name} onChange={(e) => {
-                    setTempCustomer({ ...tempCustomer, name: e.target.value });
-                    setInputChanged(true);                    
-                }}></input>
-                <input className='m-2 block px-2' type="text" value={tempCustomer.industry} onChange={(e) => {
-                    setTempCustomer({ ...tempCustomer, industry: e.target.value });
-                    setInputChanged(true);                    
-                }}></input>
+    return (
+        <>
+            {notFound ? <notFound /> : null}
+            {customer ?
+                <div>
 
-                {inputChanged ?
-                    <>
-                        <button className='block' onClick={(e) => {
-                            setTempCustomer({ ...customer });
-                            setInputChanged(false);
-                        }}>Cancel</button>
+                    
+                    <form id="customerInformation" onSubmit={updateCustomer}>
+                    <label for="Name">Name</label>
 
-                        <button className='block' onClick={updateCustomer}>Save</button>
-                    </>
-                    : null}
-            </div >
-            :
-            null
-        }
+                        <input id="Name" className='my-2 block' type="text" value={tempCustomer.name} onChange={(e) => {
+                            setTempCustomer({ ...tempCustomer, name: e.target.value });
+                            setInputChanged(true);
+                        }}></input>
 
-        <button onClick={deleteCustomer}>Delete</button>
-        <br></br>
-        <Link to='/customers'>Go Back</Link>
-    </>
+                    <label for="Industry" >Industry</label>
+                        <input id="Industry" className='my-2 block' type="text" value={tempCustomer.industry} onChange={(e) => {
+                            setTempCustomer({ ...tempCustomer, industry: e.target.value });
+                            setInputChanged(true);
+                        }}></input>
 
-);
+                    </form>
+
+                    {/* Delete button */}
+                    <button className='bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 border' onClick={deleteCustomer}>Delete</button>
+
+                    {inputChanged ?
+                        <>
+
+                            <button className='bg-white hover:bg-blue-500 text-blue-500 font-semibold hover:text-blue-500 py-1 px-2 border border-blue-500 hover:border-transparent border' onClick={(e) => {
+                                setTempCustomer({ ...customer });
+                                setInputChanged(false);
+                            }}>Cancel</button>
+
+                            <button className='bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 border' id="customerInformation">Save</button>
+                        </>
+                        : null}
+                </div >
+                :
+                null
+            }
+
+            {/* Display errors */}
+            {error ? <p className="text-red font-bold">{error}</p> : null}
+
+            <Link to='/customers'>Go Back</Link>
+        </>
+
+    );
 }
 export default Customer;
