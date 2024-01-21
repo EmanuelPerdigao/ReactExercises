@@ -137,7 +137,6 @@ export default function Header(props) {
             <Disclosure.Panel className="sm:hidden">
               <div className="space-y-1 px-2 pb-3 pt-2">
                 {navigation.map((item) => (
-                  <>
                     <NavLink
                       key={item.name}
                       to={item.href}
@@ -153,7 +152,6 @@ export default function Header(props) {
                     >
                       {item.name}
                     </NavLink>
-                  </>
                 ))}
               </div>
             </Disclosure.Panel>

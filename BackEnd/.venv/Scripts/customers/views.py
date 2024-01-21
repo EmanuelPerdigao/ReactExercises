@@ -30,14 +30,15 @@ def customer(request, id):
         serializer = CustomerSerializer(data)
         return Response({'customer': serializer.data})
     
-    elif request.method == 'DELETE':
-        data.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-    
     elif request.method == 'POST':
         serializer = CustomerSerializer(data, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response({'customer': serializer.data})
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    elif request.method == 'DELETE':
+        data.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
 
