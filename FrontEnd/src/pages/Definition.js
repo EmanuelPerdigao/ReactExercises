@@ -1,61 +1,63 @@
-import { useState, useEffect } from "react"
-import { redirect, useParams, Link } from "react-router-dom";
-import notFound from "../components/NotFound";
-import DefinitionSearch from "../components/DefinitionSearch"
+import { useState, useEffect } from 'react';
+import { useParams, useNavigate, Link, useLocation } from 'react-router-dom';
+import { v4 as uuidv4 } from 'uuid';
+import DefinitionSearch from '../components/DefinitionSearch';
+import NotFound from '../components/NotFound';
+import useFetch from '../Hooks/UseFetch';
 
 export default function Definition() {
-    const [error, setError] = useState(false);
-    const [apiResponse, setApiResponse] = useState();
+    //const [word, setWord] = useState();
+    //const [notFound, setNotFound] = useState(false);
+    //const [error, setError] = useState(false);
     let { search } = useParams();
-    //const url = "https://httpstat.us/501";
-    const url = "https://api.dictionaryapi.dev/api/v2/entries/en/" + search;
+
+    const location = useLocation();
+    const navigate = useNavigate();
+    const {
+        request,
+        data: [{ meanings: word }] = [{}],
+        errorStatus,
+    } = useFetch('https://api.dictionaryapi.dev/api/v2/entries/en/' + search);
 
     useEffect(() => {
-        fetch(url)
-            .then((response) => {
-                
-                if (!response.ok) {
-                    setError(true);
-                    throw new Error('Something went wrong!');
-                }
-                return response.json();
-            })
-            .then((data) => {
-                setApiResponse(data[0].meanings);
-            })
-            .catch((e) => {
-                console.log(e.message);
-            });
-    }, []);
+        request();
+    }, [search]);
 
-    if (error) {
+    if (errorStatus === 404) {
         return (
             <>
-                <p>Error</p>
-                <Link to="/definition">return to search page</Link>
+                <NotFound />
+                <Link to="/dictionary">Search another</Link>
+            </>
+        );
+    }
+
+    if (errorStatus) {
+        return (
+            <>
+                <p>There was a problem with the server, try again later.</p>
+                <Link to="/dictionary">Search another</Link>
             </>
         );
     }
 
     return (
         <>
-            {apiResponse ? (
+            {word ? (
                 <>
-                    <p>Here is a definition of-{search}:</p>
-
-                    {apiResponse.map((meaning) => {
+                    <h1>Here is a definition:</h1>
+                    {word.map((meaning) => {
                         return (
-                            <p>
-                                {meaning.partOfSpeech + ' :'}
+                            <p key={uuidv4()}>
+                                {meaning.partOfSpeech + ': '}
                                 {meaning.definitions[0].definition}
                             </p>
                         );
                     })}
-                    <p>Search again!</p>
-                    <DefinitionSearch></DefinitionSearch>
+                    <p>Search again:</p>
+                    <DefinitionSearch />
                 </>
-            ) : null
-            }
+            ) : null}
         </>
     );
 }

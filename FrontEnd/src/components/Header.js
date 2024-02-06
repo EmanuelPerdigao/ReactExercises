@@ -1,13 +1,13 @@
-import { Fragment } from 'react'
+import { Fragment, useContext } from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { NavLink } from 'react-router-dom'
+import { LoginContext } from '../App'
 
 const navigation = [
   { name: 'Employees', href: '/employees' },
   { name: 'Customers', href: '/customers' },
   { name: 'Dictionary', href: '/dictionary' },
-  { name: 'Definition', href: '/definition' },
 ]
 
 function classNames(...classes) {
@@ -15,6 +15,9 @@ function classNames(...classes) {
 }
 
 export default function Header(props) {
+
+  const [loggedIn, setLoggedIn] = useContext(LoginContext);
+
   return (
     <>
       <Disclosure as="nav" className="bg-gray-800">
@@ -61,6 +64,32 @@ export default function Header(props) {
                           {item.name}
                         </NavLink>
                       ))}
+
+                      {/* Modified the header to show when user is logged in and not */}
+
+                      {loggedIn ?
+
+                        <NavLink
+                          to={'/login'}
+                          onClick={() => {
+                            setLoggedIn(false);
+                            localStorage.clear();
+                          }
+                          }
+                          className="px-3 py-2 rounded-md text-sm font-medium no-underline text-gray-300 hover:bg-gray-700 hover:text-white"
+                        >
+                          Logout
+                        </NavLink>
+
+                        :
+
+                        <NavLink
+                          to={'/login'}
+                          className="px-3 py-2 rounded-md text-sm font-medium no-underline text-gray-300 hover:bg-gray-700 hover:text-white"
+                        >
+                          Login
+                        </NavLink>
+                      }
                     </div>
                   </div>
                 </div>
@@ -137,22 +166,47 @@ export default function Header(props) {
             <Disclosure.Panel className="sm:hidden">
               <div className="space-y-1 px-2 pb-3 pt-2">
                 {navigation.map((item) => (
-                    <NavLink
-                      key={item.name}
-                      to={item.href}
+                  <NavLink
+                    key={item.name}
+                    to={item.href}
 
-                      className={({ isActive }) => {
-                        return (
-                          'block px-3 py-2 rounded-md text-sm font-medium no-underline ' +
-                          (isActive ? 'bg-gray-900 text-white'
-                            : 'text-gray-300 hover:bg-gray-700 hover:text-white'
-                          )
-                        );
-                      }}
-                    >
-                      {item.name}
-                    </NavLink>
+                    className={({ isActive }) => {
+                      return (
+                        'block px-3 py-2 rounded-md text-sm font-medium no-underline ' +
+                        (isActive ? 'bg-gray-900 text-white'
+                          : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                        )
+                      );
+                    }}
+                  >
+                    {item.name}
+                  </NavLink>
                 ))}
+                
+                {loggedIn ?
+
+                  <NavLink
+                    to={'/login'}
+                    onClick={() => {
+                      setLoggedIn(false);
+                      localStorage.clear();
+                    }
+                    }
+                    className="block px-3 py-2 rounded-md text-sm font-medium no-underline bg-gray-900 text-white"
+                  >
+                    Logout
+                  </NavLink>
+
+                  :
+
+                  <NavLink
+                    to={'/login'}
+                    className="block px-3 py-2 rounded-md text-sm font-medium no-underline bg-gray-900 text-white"
+                  >
+                    Login
+                  </NavLink>
+                }
+                
               </div>
             </Disclosure.Panel>
           </>

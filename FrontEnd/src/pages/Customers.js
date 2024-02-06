@@ -1,86 +1,73 @@
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import AddCustomer from "../components/AddCustomer";
+import { useEffect, useState, useContext } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import AddCustomer from '../components/AddCustomer';
 import { data } from "../SharedData";
+import { LoginContext } from '../App';
+import useFetch from '../Hooks/UseFetch';
 
-function Customers() {
 
-    const url = "http://127.0.0.1:8000/api/customers";
-    const [customers, setCustomers] = useState();
-    const [apiResponse, setApiResponse] = useState();
+export default function Customers() {
+    const [loggedIn, setLoggedIn] = useContext(LoginContext);
+    //const [customers, setCustomers] = useState();
     const [show, setShow] = useState(false);
 
     function toggleShow() {
         setShow(!show);
     }
 
-    useEffect(() => {
-        fetch(url)
-            .then((response) => {
 
-                if (!response.ok) {
-                    throw new Error('Something went wrong!');
-                }
-                return response.json();
-            })
-            .then((data) => {
-                setCustomers(data.customers);
-            })
-            .catch((e) => {
-                console.log(e.message);
-            });
+    const location = useLocation();
+    const navigate = useNavigate();
+
+    const url = data.baseURL + 'api/customers/';
+    const {
+        request,appendData, data: { customers } = {},errorStatus,
+    } = useFetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: 'Bearer ' + localStorage.getItem('access'),
+        },
+    });
+
+    useEffect(() => {
+        request();
     }, []);
 
+    //useEffect(() => {
+    //    console.log(request, appendData, customers, errorStatus);
+    //});
+
     function newCustomer(name, industry) {
+        appendData({ name: name, industry: industry });
 
-        const url = data.baseURL + 'api/customers/';
-        const customerData = { name: name, industry: industry };
-
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(customerData)
-        })
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error('something wen wrong!');
-                }
-                return response.json();
-            })
-            .then((data) => {
-                toggleShow();
-                setCustomers([...customers, data.customer]);
-            })
-            .catch((e) => {
-                console.log(e);
-            })
+        if (!errorStatus) {
+            toggleShow();
+        }
     }
 
     return (
         <>
-            <h1>Here are our Customers</h1>
-            <ul>
-                {customers
-                    ? customers.map((customer) => {
-                        return (
+            <h1>Here are our customers:</h1>
+            {customers
+                ? customers.map((customer) => {
+                    return (
+                        <div className="m-2" key={customer.id}>
+                            <Link to={'/customers/' + customer.id}>
+                                <button className="no-underline bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded">
+                                    {customer.name}
+                                </button>
+                            </Link>
+                        </div>
+                    );
+                })
+                : null}
 
-                            <li key={customer.id}>
-                                <Link to={"/api/customer/" + customer.id}>{"Customer name: " + customer.name}
-                                    {" Customer industry: " + customer.industry}
-                                </Link>
-                            </li>
-
-                        );
-                    })
-                    : null
-                }
-            </ul>
-            <AddCustomer newCustomer={newCustomer} show={show} toggleShow={toggleShow}></AddCustomer>
-
+            <AddCustomer
+                newCustomer={newCustomer}
+                show={show}
+                toggleShow={toggleShow}
+            />
         </>
-
     );
 }
-export default Customers;
